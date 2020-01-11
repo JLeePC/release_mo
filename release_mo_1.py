@@ -67,29 +67,21 @@ for row in range(4,MAX+1):
 
 #TODO - Save all info into a json file
 
+for i in range(0,len(mo_list)):
 
-with open('manufacturing orders.json', 'w') as json_file:
-    data = {}
-    data[JOB]
-    my_json = json.dumps(data)
-    for i in range(len(mo_list)):
-        mo = mo_list[i]
-        mo_split = mo.split("-")
-        dash = mo_split[2]
-        drawing = drawing_list[i]
-        description = description_list[i]
-        qty = qty_list[i]
-        start_date = start_date_list[i]
-        finish_date = finish_date_list[i]
+    my_dict = { "0519-LR6": {
+            mo_list[i]: {
+                "Drawing Number": drawing_list[i],
+                "Description": description_list[i],
+                "QTY": qty_list[i],
+                "Start Date": start_date_list[i],
+                "Finish Date": finish_date_list[i],
+            }
+        }
+    }
+    data = json.dumps(my_dict, indent=2, sort_keys=True) # This would be the JSON file
 
-        data[JOB][dash][drawing]
-        data[JOB][dash][description]
-        data[JOB][dash][qty]
-        data[JOB][dash][start_date]
-        data[JOB][dash][finish_date]
-        
-        my_json = json.dumps(data) # This would be the JSON file
-
+    print(data)
 
 #TODO - Sort json file in alphabetical order. Or use a range to go in numerical order.
 #TODO - Use that info to release MO's
