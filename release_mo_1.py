@@ -11,6 +11,13 @@ sheet = wb[JOB]
 MAX = 35
 #MAX = sheet.max_row
 
+def format_date(d):
+    year = str(d.year)
+    month = str(d.month).zfill(2)
+    day = str(d.day).zfill(2)
+    final_date = "{}{}{}".format(month,day,year)
+    return(final_date)
+
 #* MO number
 #* Drawing number & Description
 # mo_list = []
@@ -48,23 +55,12 @@ for row in range(4,MAX+1):
 
     #* Start date
     start_date = sheet.cell(row=row, column=9).value
-
-    start_year = str(start_date.year)
-    start_month = str(start_date.month).zfill(2)
-    start_day = str(start_date.day).zfill(2)
-    new_start_date = "{}{}{}".format(start_month,start_day,start_year)
-    # start_date_list.append(new_start_date)
-    builder['start_date'] = new_start_date
+    builder['start_date'] = format_date(start_date)
     #print(start_date_list)
 
     #* Finish date
     finish_date = sheet.cell(row=row, column=10).value
-
-    finish_year = str(finish_date.year)
-    finish_month = str(finish_date.month).zfill(2)
-    finish_day = str(finish_date.day).zfill(2)
-    new_finish_date = "{}{}{}".format(finish_month, finish_day, finish_year)
-    builder['finish_date'] = new_finish_date
+    builder['finish_date'] = format_date(finish_date)
     # finish_date_list.append(new_finish_date)
     #print(finish_date_list)
 
