@@ -73,8 +73,8 @@ for row in range(4,MAX+1):
 
 complete_job = {JOB:job_list}
 # print(complete_job)
-a = json.dumps(complete_job,indent=2)
-print(a)
+job_json = json.dumps(complete_job,indent=2)
+print(job_json)
 #TODO - Save all info into a json file
 
 # for i in range(0,len(mo_list)):
