@@ -16,6 +16,9 @@ MAX = 35
 mo_list = []
 drawing_list = []
 description_list = []
+start_date_list = []
+finish_date_list = []
+qty_list = []
 for row in range(4,MAX+1):
     for i in range(1,5):
         mo = str(sheet.cell(row=row, column=i).value)
@@ -30,13 +33,13 @@ for row in range(4,MAX+1):
         description_list.append(description_drawing_split[1])
     except:
         description_list.append("")
-#print(mo_list)
-#print(drawing_list)
-#print(description_list)
+    print(mo)
+    print(len(description_drawing_split))
+    #print(mo_list)
+    #print(drawing_list)
+    #print(description_list)
 
-#* Start date
-start_date_list = []
-for row in range(4,MAX+1):
+    #* Start date
     start_date = sheet.cell(row=row, column=9).value
 
     start_year = str(start_date.year)
@@ -44,11 +47,9 @@ for row in range(4,MAX+1):
     start_day = str(start_date.day).zfill(2)
     new_start_date = "{}{}{}".format(start_month,start_day,start_year)
     start_date_list.append(new_start_date)
-#print(start_date_list)
+    #print(start_date_list)
 
-#* Finish date
-finish_date_list = []
-for row in range(4,MAX+1):
+    #* Finish date
     finish_date = sheet.cell(row=row, column=10).value
 
     finish_year = str(finish_date.year)
@@ -56,14 +57,12 @@ for row in range(4,MAX+1):
     finish_day = str(finish_date.day).zfill(2)
     new_finish_date = "{}{}{}".format(finish_month, finish_day, finish_year)
     finish_date_list.append(new_finish_date)
-#print(finish_date_list)
+    #print(finish_date_list)
 
-#* QTY
-qty_list = []
-for row in range(4,MAX+1):
+    #* QTY
     qty = str(sheet.cell(row=row, column=11).value)
     qty_list.append(qty)
-#print(qty_list)
+    #print(qty_list)
 
 #TODO - Save all info into a json file
 
