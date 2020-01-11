@@ -66,6 +66,16 @@ for row in range(4,MAX+1):
 #print(qty_list)
 
 #TODO - Save all info into a json file
-json.dumps(mo_list)
+"""
+{
+    "0519-LR6": {
+        "Drawing Number": 
+        "Description": 
+        "QTY": 
+        "Start Date": 
+        "Finish Date":
+    }
+}
+
 #TODO - Sort json file in alphabetical order. Or use a range to go in numerical order.
-#TODO - Use that info to release MO's
+#TODO - Use that info to release MO
