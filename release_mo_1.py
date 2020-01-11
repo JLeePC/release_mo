@@ -67,6 +67,18 @@ for row in range(4,MAX+1):
 
 #TODO - Save all info into a json file
 """
+Example would be:
+
+my_dict = { "0519-LR6": {
+        "-01": {
+            "Drawing Number": 
+            "Description": 
+            "QTY": 
+            "Start Date": 
+            "Finish Date":
+        }
+ }
+my_json = json.dumps(my_dict) # This would be the JSON file
 {
     "0519-LR6": {
         "-01": {
