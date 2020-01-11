@@ -66,19 +66,30 @@ for row in range(4,MAX+1):
 #print(qty_list)
 
 #TODO - Save all info into a json file
-"""
-{
-    "0519-LR6": {
-        "-01": {
-            "Drawing Number": 
-            "Description": 
-            "QTY": 
-            "Start Date": 
-            "Finish Date":
-        }
-    }
-}
-"""
+
+
+with open('manufacturing orders.json', 'w') as json_file:
+    data = {}
+    data[JOB]
+    my_json = json.dumps(data)
+    for i in range(len(mo_list)):
+        mo = mo_list[i]
+        mo_split = mo.split("-")
+        dash = mo_split[2]
+        drawing = drawing_list[i]
+        description = description_list[i]
+        qty = qty_list[i]
+        start_date = start_date_list[i]
+        finish_date = finish_date_list[i]
+
+        data[JOB][dash][drawing]
+        data[JOB][dash][description]
+        data[JOB][dash][qty]
+        data[JOB][dash][start_date]
+        data[JOB][dash][finish_date]
+        
+        my_json = json.dumps(data) # This would be the JSON file
+
 
 #TODO - Sort json file in alphabetical order. Or use a range to go in numerical order.
 #TODO - Use that info to release MO's
