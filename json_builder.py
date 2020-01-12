@@ -61,7 +61,7 @@ complete_job = {JOB:job_list}
 job_json = json.dumps(complete_job, indent=2)
 print(job_json)
 
-with open("manufacturing orders.json", 'w', encoding='utf-8') as f:
+with open("QS-100 MASTER SCHEDULE.json", 'w', encoding='utf-8') as f:
     json.dump(complete_job, f, ensure_ascii=False, indent=2)
 
 
