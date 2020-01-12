@@ -21,40 +21,49 @@ def format_date(d):
 #* Drawing number & Description
 
 job_list = []
-builder = {}
 
 for row in range(4,MAX+1):
+    builder = {}
     for i in range(1,5):
         mo = str(sheet.cell(row=row, column=i).value)
         description_drawing = sheet.cell(row=row, column=i+1).value
         if "None" not in mo:
             break
-    builder['mo'] = mo
-    description_drawing_split = description_drawing.split(" - ")
-    builder['drawing_list'] = description_drawing_split[0]
+    builder['Manufacturing Number'] = mo
+    if "PKG" in description_drawing:
+        description_drawing_split = description_drawing.split(" ")
+        builder['Drawing No.'] = description_drawing_split[0]
+        builder['Description'] = description_drawing_split[0]
+    else:
+        description_drawing_split = description_drawing.split(" ")
+        builder['Drawing No.'] = description_drawing_split[0]
 
-    try:
-        builder['description_list'] = description_drawing_split[1]
-    except:
-        continue
+        try:
+            builder['Description'] = description_drawing_split[2]
+        except:
+            continue
 
     #* Start date
     start_date = sheet.cell(row=row, column=9).value
-    builder['start_date'] = format_date(start_date)
+    builder['Start Date'] = format_date(start_date)
 
     #* Finish date
     finish_date = sheet.cell(row=row, column=10).value
-    builder['finish_date'] = format_date(finish_date)
+    builder['Finish Date'] = format_date(finish_date)
 
     #* QTY
     qty = str(sheet.cell(row=row, column=11).value)
-    builder['qty'] = qty
+    builder['Quantity'] = qty
     job_list.append(builder)
 
+#* Save all info into a json file
 complete_job = {JOB:job_list}
-job_json = json.dumps(complete_job,indent=2)
+job_json = json.dumps(complete_job, indent=2)
 print(job_json)
-#TODO - Save all info into a json file
+
+with open("manufacturing orders.json", 'w', encoding='utf-8') as f:
+    json.dump(complete_job, f, ensure_ascii=False, indent=2)
+
 
 #TODO - Sort json file in alphabetical order. Or use a range to go in numerical order.
 #TODO - Use that info to release MO's
