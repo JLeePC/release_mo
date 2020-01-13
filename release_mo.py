@@ -1,202 +1,216 @@
-# MO release using Excel
+# MO release using Json
 
 import pyautogui
 import pygetwindow as gw
 import time
 import openpyxl
+import json
 
-pyautogui.PAUSE = 1
+pyautogui.PAUSE = 0.5
+
+skip_me = ['01','02','03','04','05','06','07']
 
 print('Press Ctrl-C to quit.')
 
 try:
     start_total_time = time.time()
-    start = int(input('What row do you want to start on?: '))
-    end = int(input('What row do you want to end on?: '))
-    #job_number = input('What is the job number?: ')
-    path = 'C:\\Users\\jlee.NTPV\\Desktop\\MO-Release\\HT-202NC MASTER PRODUCTION SCHEDULE.xlsx'
-    wb = openpyxl.load_workbook(path)
-    #wb.get_sheet_names()
-    #sheet = wb.get_sheet_by_name(job_number)
-    sheet = wb.active
-
-    # COORDINATES
-    #------------------
-    # New           360, 87
-    # MO No.        210, 100    C
-    # Description   234, 125    E
-    # Build Item    261, 180    D
-    # Job No.       228, 313
-    # Location No.  227, 338
-    # Customer      237, 362
-    # Ordered       242, 423    
-    # Order Date    597, 439
-    # Start Date    600, 473    I
-    # Comp. Date    599, 497    J
 
     # VARIABLES
     #----------------
-
-    #end = sheet.max_row
-    job_range = range(start, end+1, 1)
     loop_counter = 0
     total_loop_time = 0
 
     # LOOP
     # ---------------
+    job_list = []
+    with open("QS-100 MASTER SCHEDULE.json") as f:
+        data = json.load(f)
+        for j in data["MOs"]:
+            if j["Job"] not in job_list:
+                job_list.append(j["Job"])
 
-    for i in job_range:
-        start_loop_time = time.time()
-        print('Current value = ' + str(i))
-        mo_number = sheet.cell(row = i, column = 3)
-        description = sheet.cell(row = i, column = 5)
-        build_item = sheet.cell(row = i, column = 4)
-        job_number = mo_number
-        location_number = str('NTPV')
-        customer = str('Kinder Equipment Co')
-        ordered = str('1')
-        start_date = sheet.cell(row = i, column = 9)
-        completion_date = sheet.cell(row = i, column = 10)
+        dash_count = int(len(data["MOs"]) / len(job_list))
 
-        print('MO = ' + str(mo_number.value))
-        print('Description = ' + str(description.value))
-        print('Build Item = ' + str(build_item.value))
-        print('Start Date = ' + str(start_date.value))
-        print('Completion Date = ' + str(completion_date.value))
+        for i in range(0, len(job_list)):
+            for k in range(9,dash_count+1):
+                skip = str(k).zfill(2)
+                if skip in skip_me:
+                    continue
+                for j in data["MOs"]:
+                    job = j["Job"]
+                    customer = j["Customer"]
+                    location = j["Location"]
+                    mo = j["Manufacturing Order"]
+                    drawing_no = j["Drawing No."]
+                    description = j["Description"]
+                    start = j["Start Date"]
+                    finish = j["Finish Date"]
+                    quantity = j["Quantity"]
+                    mo_split = mo.split("-")
+                    dash = int(mo_split[2])
+                    if job in job_list[i]:
+                        if k == dash:
+                            break
+                print(mo)
+                print(customer)
+                print(location)
+                print(drawing_no)
+                print(description)
+                print(start)
+                print(finish)
+                print(quantity)
 
-    # NEW
-    #----------------
-        print('-------------------------')
-        #input('Press ENTER to continue.')
-        #print('-------------------------')
-        pyautogui.click(360, 87)
+                # NEW
+                #----------------
+                print('-------------------------')
+                start_loop_time = time.time()
+                #input('Press ENTER to continue.')
+                #print('-------------------------')
+                #pyautogui.click(380, 80)
+                #time.sleep(1)
 
-    # WAIT FOR MO WINDOW
-    # ---------------
-        
-        while len(gw.getWindowsWithTitle('Manufacturing Orders - North Texas Pressure Vessels Inc.')) == 1:
-            time.sleep(2)
-        time.sleep(8)
+                # WAIT FOR MO WINDOW
+                # ---------------
+                
+                #while len(gw.getWindowsWithTitle('Manufacturing Orders - North Texas Pressure Vessels Inc.')) == 0:
+                    #time.sleep(2)
+                #time.sleep(8)
 
-    # MO NO.
-    # ---------------
+                # MO NO.
+                # ---------------
+                pyautogui.doubleClick(210, 93)
+                pyautogui.typewrite(str(mo))
+                pyautogui.typewrite(['tab'])
+                while len(gw.getWindowsWithTitle('Manufacturing Orders - North Texas Pressure Vessels Inc.')) < 2:
+                    time.sleep(2)
+                time.sleep(1)
+                pyautogui.doubleClick(1032, 595)
+                time.sleep(1)
+                
+                # DESCRIPTION
+                # ---------------
 
-        pyautogui.doubleClick(210, 100)
-        pyautogui.typewrite(str(mo_number.value))
-        
-    # DESCRIPTION
-    # ---------------
+                pyautogui.doubleClick(345, 118)
+                pyautogui.typewrite(str(description))
+                time.sleep(1)
 
-        pyautogui.doubleClick(234, 125)
-        pyautogui.typewrite(str(description.value))
+                # BUILD ITEM
+                # ---------------
 
-    # BUILD ITEM
-    # ---------------
+                pyautogui.doubleClick(246, 174)
+                pyautogui.typewrite(str(drawing_no))
+                time.sleep(1)
 
-        pyautogui.doubleClick(261, 180)
-        pyautogui.typewrite(str(build_item.value))
+                # JOB NUMBER
+                # ---------------
 
-    # JOB NUMBER
-    # ---------------
+                pyautogui.doubleClick(195, 306)
+                pyautogui.typewrite(str(mo))
+                # tab
+                # check pop up window
+                pyautogui.click(200, 331)
+                time.sleep(1)
+                pyautogui.click(928, 537)
+                pyautogui.typewrite(str(description))
+                time.sleep(1)
+                pyautogui.click(888, 588)
+                time.sleep(1)
 
-        pyautogui.doubleClick(228, 313)
-        pyautogui.typewrite(str(job_number.value))
-        # tab
-        pyautogui.click(237, 338)
-        time.sleep(2)
-        pyautogui.click(928, 537)
-        pyautogui.typewrite(str(description.value))
-        pyautogui.click(888, 588)
-        time.sleep(2)
+                # LOCATION
+                # ---------------
 
-    # LOCATION
-    # ---------------
+                pyautogui.doubleClick(200, 331)
+                pyautogui.typewrite(location)
+                time.sleep(1)
 
-        pyautogui.doubleClick(227, 338)
-        pyautogui.typewrite(location_number)
+                # CUSTOMER (LIFTROCK)
+                # ---------------
 
-    # CUSTOMER (LIFTROCK)
-    # ---------------
+                pyautogui.doubleClick(245, 354)
+                pyautogui.typewrite(customer)
+                time.sleep(1)
 
-        pyautogui.doubleClick(237, 362)
-        pyautogui.typewrite(customer)
+                # ORDERED
+                # ---------------
 
-    # ORDERED
-    # ---------------
+                pyautogui.doubleClick(214, 417)
+                pyautogui.typewrite(str(quantity))
+                time.sleep(1)
+                # tab
+                pyautogui.click(237, 338)
+                time.sleep(2)
+                # CLICK YES
+                pyautogui.click(1024, 595)
+                time.sleep(1)
+                # wait for selcet screen
+                while len(gw.getWindowsWithTitle('Select Revision to Use - Bills of Material')) < 1:
+                    time.sleep(2)
+                time.sleep(1)
+                pyautogui.click(1166, 762)
+                # wait for select screen to exit
+                while len(gw.getWindowsWithTitle('Select Revision to Use - Bills of Material')) == 1:
+                    time.sleep(2)
+                time.sleep(2)
 
-        pyautogui.doubleClick(242, 423)
-        pyautogui.typewrite(ordered)
-        # tab
-        pyautogui.click(237, 338)
-        # CLICK YES
-        pyautogui.click(1025, 595)
-        # wait for selcet screen
-        while len(gw.getWindowsWithTitle('Select Revision to Use - Bills of Material')) < 1:
-            time.sleep(2)
-        time.sleep(1)
-        pyautogui.click(1166, 762)
-        # wait for select screen to exit
-        while len(gw.getWindowsWithTitle('Select Revision to Use - Bills of Material')) == 1:
-            time.sleep(2)
-        time.sleep(1)
+                # COMPLETION DATE
+                # ---------------
 
-    # COMPLETION DATE
-    # ---------------
+                pyautogui.doubleClick(571, 488)
+                pyautogui.typewrite(str(finish))
+                time.sleep(1)
 
-        pyautogui.doubleClick(599, 497)
-        pyautogui.typewrite(str(completion_date.value))
+                # START DATE
+                # ---------------
 
-    # START DATE
-    # ---------------
+                pyautogui.doubleClick(571, 465)
+                pyautogui.typewrite(str(start))
+                time.sleep(1)
 
-        pyautogui.doubleClick(600, 473)
-        pyautogui.typewrite(str(start_date.value))
+            
+                # CLICK DESCRIPTION BOX
+                # ---------------
 
-    
-    # CLICK DESCRIPTION BOX
-    # ---------------
+                pyautogui.click(345, 118)
+                time.sleep(1)
 
-        pyautogui.click(234, 125)
+                # SAVE
+                #----------------
+                #input()
+                pyautogui.click(77, 58)
+                time.sleep(1)
 
-    # SAVE
-    #----------------
-        #input()
-        pyautogui.click(76, 57)
+                # RELEASE
+                # ---------------
 
-    # RELEASE
-    # ---------------
+                pyautogui.click(427, 58)
+                time.sleep(1)
 
-        pyautogui.click(427, 58)
+                # CLICK OK
+                # ---------------
 
-    # CLICK OK
-    # ---------------
+                while len(gw.getWindowsWithTitle('Manufacturing Orders - North Texas Pressure Vessels Inc.')) == 1:
+                    time.sleep(1)
+                pyautogui.click(1082, 595)
+                time.sleep(5)
 
-        while len(gw.getWindowsWithTitle('Manufacturing Orders - North Texas Pressure Vessels Inc.')) == 1:
-            time.sleep(1)
-        pyautogui.click(1082, 595)
-        time.sleep(5)
-
-    # CLOSE
-    # ---------------
-        
-        pyautogui.click(347, 57)
-        time.sleep(2)
-        # wait for window to close.
-        while len(gw.getWindowsWithTitle('Manufacturing Orders - North Texas Pressure Vessels Inc.')) == 1:
-            time.sleep(1)
-        time.sleep(2)
-        pyautogui.click(1889, 1007)
-        #else:
-         #   input('Press ENTER to continue.')
-          #  print('-------------------------')
-        loop_time = time.time() - start_loop_time
-        loop_counter = loop_counter + 1
-        total_loop_time = total_loop_time + loop_time
-        print('Loop time: ' + str(round(loop_time, 3)) + ' Seconds')
-        print('-------------------------')
-        
+                loop_time = time.time() - start_loop_time
+                loop_counter = loop_counter + 1
+                total_loop_time = total_loop_time + loop_time
+                print('Loop time: ' + str(round(loop_time, 3)) + ' Seconds')
+                print('-------------------------')
+                
 except KeyboardInterrupt:
     print('\nDone')
+
+# CLOSE
+# ---------------
+
+pyautogui.click(347, 57)
+time.sleep(2)
+# wait for window to close.
+while len(gw.getWindowsWithTitle('Manufacturing Orders - North Texas Pressure Vessels Inc.')) == 1:
+    time.sleep(1)
+time.sleep(5)
 
 end_total_time = time.time()
 elapsed_time = round(end_total_time - start_total_time, 3)
