@@ -18,6 +18,7 @@ for sheet in wb:
 
     MAX = 35
     JOB = str(sheet.cell(row=1, column=1).value)
+    CUSTOMER = str(sheet.cell(row=3, column=1).value)
     #MAX = sheet.max_row
 
     #* MO number
@@ -29,6 +30,7 @@ for sheet in wb:
     for row in range(4,MAX+1):
         builder = {}
         builder['Job'] = JOB
+        builder['Customer'] = CUSTOMER
         for i in range(1,5):
             mo = str(sheet.cell(row=row, column=i).value)
             description_drawing = sheet.cell(row=row, column=i+1).value
@@ -66,13 +68,11 @@ for sheet in wb:
     jobs.append(job)
 
 complete_job = {"MOs": job_list}
-#complete_job = {JOB:job_list}
     
 with open("QS-100 MASTER SCHEDULE.json", 'w', encoding='utf-8') as f:
         json.dump(complete_job, f, ensure_ascii=False, indent=2)
 
-#TODO - Sort json file in alphabetical order. Or use a range to go in numerical order.
-#TODO - Use that info to release MO's
+#*Sort json file in alphabetical order. Or use a range to go in numerical order.
 
 job_list = []
 with open("QS-100 MASTER SCHEDULE.json") as f:
@@ -88,6 +88,7 @@ with open("QS-100 MASTER SCHEDULE.json") as f:
         for k in range(1,dash_count+1):
             for j in data["MOs"]:
                 job = j["Job"]
+                customer = j["Customer"]
                 mo = j["Manufacturing Order"]
                 drawing_no = j["Drawing No."]
                 description = j["Description"]
@@ -99,8 +100,11 @@ with open("QS-100 MASTER SCHEDULE.json") as f:
                 if job in job_list[i]:
                     if k == dash:
                         print(mo)
+                        print(customer)
                         print(drawing_no)
                         print(description)
                         print(start)
                         print(finish)
                         print(quantity)
+
+#TODO - Use that info to release MO's
