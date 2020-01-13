@@ -12,6 +12,7 @@ def format_date(d):
 wb = openpyxl.load_workbook('QS-100 MASTER SCHEDULE.xlsx', data_only = True)
 
 jobs = []
+job_list = []
 
 for sheet in wb:
 
@@ -22,16 +23,18 @@ for sheet in wb:
     #* MO number
     #* Drawing number & Description
 
-    job_list = []
+    
+    job_builder = {}
 
     for row in range(4,MAX+1):
         builder = {}
+        builder['Job'] = JOB
         for i in range(1,5):
             mo = str(sheet.cell(row=row, column=i).value)
             description_drawing = sheet.cell(row=row, column=i+1).value
             if "None" not in mo:
                 break
-        builder['Manufacturing Number'] = mo
+        builder['Manufacturing Order'] = mo
         if "PKG" in description_drawing:
             description_drawing_split = description_drawing.split(" ")
             builder['Drawing No.'] = description_drawing_split[0]
@@ -58,15 +61,42 @@ for sheet in wb:
         builder['Quantity'] = qty
         job_list.append(builder)
 
-#* Save all info into a json file
+    #* Save all info into a json file
     job = {JOB:job_list}
     jobs.append(job)
 
-complete_job = {"Manufacturing Orders": jobs}
+complete_job = {"MOs": job_list}
 #complete_job = {JOB:job_list}
     
 with open("QS-100 MASTER SCHEDULE.json", 'w', encoding='utf-8') as f:
         json.dump(complete_job, f, ensure_ascii=False, indent=2)
 
-    #TODO - Sort json file in alphabetical order. Or use a range to go in numerical order.
-    #TODO - Use that info to release MO's
+#TODO - Sort json file in alphabetical order. Or use a range to go in numerical order.
+#TODO - Use that info to release MO's
+
+job_list = []
+with open("QS-100 MASTER SCHEDULE.json") as f:
+    data = json.load(f)
+    for j in data["MOs"]:
+        if j["Job"] not in job_list:
+            job_list.append(j["Job"])
+
+    dash_count = int(len(data["MOs"]) / len(job_list))
+    print(dash_count)
+
+    for i in range(0, len(job_list)):
+        for k in range(1,dash_count):
+            for j in data["MOs"]:
+                job = j["Job"]
+                mo = j["Manufacturing Order"]
+                drawing_no = j["Drawing No."]
+                description = j["Description"]
+                start = j["Start Date"]
+                finish = j["Finish Date"]
+                quantity = j["Quantity"]
+                mo_split = mo.split("-")
+                dash = int(mo_split[2])
+                if job in job_list[i]:
+                    if k == dash:
+                        print(mo)
+                        print(drawing_no)
