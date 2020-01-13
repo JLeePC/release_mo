@@ -81,8 +81,12 @@ try:
                 pyautogui.doubleClick(210, 93)
                 pyautogui.typewrite(str(mo))
                 pyautogui.typewrite(['tab'])
+                count = 1
                 while len(gw.getWindowsWithTitle('Manufacturing Orders - North Texas Pressure Vessels Inc.')) < 2:
                     time.sleep(2)
+                    count = count + 1
+                    if count == 5:
+                        break
                 time.sleep(1)
                 pyautogui.doubleClick(1032, 595)
                 time.sleep(1)
@@ -197,20 +201,11 @@ try:
                 loop_counter = loop_counter + 1
                 total_loop_time = total_loop_time + loop_time
                 print('Loop time: ' + str(round(loop_time, 3)) + ' Seconds')
+                print('Total time: {} Seconds'.format(str(round(total_loop_time, 3))))
                 print('-------------------------')
                 
 except KeyboardInterrupt:
     print('\nDone')
-
-# CLOSE
-# ---------------
-
-pyautogui.click(347, 57)
-time.sleep(2)
-# wait for window to close.
-while len(gw.getWindowsWithTitle('Manufacturing Orders - North Texas Pressure Vessels Inc.')) == 1:
-    time.sleep(1)
-time.sleep(5)
 
 end_total_time = time.time()
 elapsed_time = round(end_total_time - start_total_time, 3)
@@ -225,5 +220,14 @@ while average_loop_time >= 60:
     loop_minutes = loop_minutes + 1
 print('\nAverage time per loop: ' +str(loop_minutes) + ' Minutes, ' + str(round(average_loop_time, 3)) + ' Seconds')
 print('\nElapsed time: ' + str(minutes) + ' Minutes, ' + str(round(elapsed_time, 3)) + ' Seconds')
+
+# CLOSE
+# ---------------
+pyautogui.click(347, 57)
+time.sleep(2)
+# wait for window to close.
+while len(gw.getWindowsWithTitle('Manufacturing Orders - North Texas Pressure Vessels Inc.')) == 1:
+    time.sleep(1)
+time.sleep(5)
 
 print('\nCompleted.')
