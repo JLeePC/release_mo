@@ -85,7 +85,7 @@ with open("QS-100 MASTER SCHEDULE.json") as f:
     print(dash_count)
 
     for i in range(0, len(job_list)):
-        for k in range(1,dash_count):
+        for k in range(1,dash_count+1):
             for j in data["MOs"]:
                 job = j["Job"]
                 mo = j["Manufacturing Order"]
@@ -100,3 +100,7 @@ with open("QS-100 MASTER SCHEDULE.json") as f:
                     if k == dash:
                         print(mo)
                         print(drawing_no)
+                        print(description)
+                        print(start)
+                        print(finish)
+                        print(quantity)
