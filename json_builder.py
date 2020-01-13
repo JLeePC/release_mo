@@ -108,3 +108,5 @@ with open("QS-100 MASTER SCHEDULE.json") as f:
                         print(quantity)
 
 #TODO - Use that info to release MO's
+#* Should be able to just copy the pyautogui and pygewindow portion of the original script to input the given data
+#* talk to howard or phillip about the customer box and ask about the vessels that are already released. maybe put a skip number option
