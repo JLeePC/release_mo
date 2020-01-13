@@ -4,6 +4,8 @@ import pyautogui
 import pygetwindow as gw
 import time
 
+#TODO - try to get the information automaticlaly read from the .json file. if not this is good enough tbh
+
 pyautogui.PAUSE = 0.005
 
 print('Press Ctrl-C to quit.')

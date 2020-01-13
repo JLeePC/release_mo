@@ -5,6 +5,9 @@ import pyautogui
 import getpass
 import PyPDF2
 
+#TODO - merge pdfs after pdf_mo has made the pdfs. use the .json file to know the order to merge them.
+#TODO  DD goes before any dash number. 
+
 job = input("What job would you like to merge?: ")
 
 print("\nMerging...\n")

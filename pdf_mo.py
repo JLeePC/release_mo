@@ -4,6 +4,8 @@ import pyautogui
 import pygetwindow as gw
 import time
 
+#TODO - Make this automated using the .json file that is generated for the release_mo.py
+
 pyautogui.PAUSE = 0.005
 
 print('Press Ctrl-C to quit.')
