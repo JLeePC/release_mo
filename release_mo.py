@@ -8,7 +8,8 @@ import json
 
 pyautogui.PAUSE = 0.5
 
-skip_me = ['01','02','03','04','05','06','07']
+skip_me = []
+location = "NTPV"
 
 print('Press Ctrl-C to quit.')
 
@@ -32,14 +33,13 @@ try:
         dash_count = int(len(data["MOs"]) / len(job_list))
 
         for i in range(0, len(job_list)):
-            for k in range(9,dash_count+1):
+            for k in range(1,dash_count+1):
                 skip = str(k).zfill(2)
                 if skip in skip_me:
                     continue
                 for j in data["MOs"]:
                     job = j["Job"]
                     customer = j["Customer"]
-                    location = j["Location"]
                     mo = j["Manufacturing Order"]
                     drawing_no = j["Drawing No."]
                     description = j["Description"]

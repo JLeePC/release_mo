@@ -19,7 +19,6 @@ for sheet in wb:
     #MAX = 35
     JOB = str(sheet.cell(row=1, column=1).value)
     CUSTOMER = str(sheet.cell(row=3, column=1).value)
-    LOCATION = str(sheet.cell(row=3, column=2).value)
     MAX = sheet.max_row
 
     #* MO number
@@ -32,7 +31,6 @@ for sheet in wb:
         builder = {}
         builder['Job'] = JOB
         builder['Customer'] = CUSTOMER
-        builder['Location'] = LOCATION
         for i in range(1,5):
             mo = str(sheet.cell(row=row, column=i).value)
             description_drawing = sheet.cell(row=row, column=i+1).value
@@ -75,11 +73,11 @@ complete_job = {"MOs": job_list}
 with open("QS-100 MASTER SCHEDULE.json", 'w', encoding='utf-8') as f:
         json.dump(complete_job, f, ensure_ascii=False, indent=2)
 
-#*Sort json file in alphabetical order. Or use a range to go in numerical order.
+#*Sort json file in alphabetical order. Or use a range to go in numerical order. (I use a range)
 
 """
 job_list = []
-skip_me = ['02','03']
+skip_me = []
 with open("QS-100 MASTER SCHEDULE.json") as f:
     data = json.load(f)
     for j in data["MOs"]:
@@ -115,7 +113,3 @@ with open("QS-100 MASTER SCHEDULE.json") as f:
             print(finish)
             print(quantity)
 """
-
-#TODO - Use that info to release MO's
-#* Should be able to just copy the pyautogui and pygewindow portion of the original script to input the given data
-#* talk to howard or phillip about the customer box and ask about the vessels that are already released. maybe put a skip number option
