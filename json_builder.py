@@ -75,41 +75,18 @@ with open("QS-100 MASTER SCHEDULE.json", 'w', encoding='utf-8') as f:
 
 #*Sort json file in alphabetical order. Or use a range to go in numerical order. (I use a range)
 
-"""
+
 job_list = []
-skip_me = []
 with open("QS-100 MASTER SCHEDULE.json") as f:
     data = json.load(f)
-    for j in data["MOs"]:
-        if j["Job"] not in job_list:
-            job_list.append(j["Job"])
+    for k in data["MOs"]:
+        job = k["Job"]
+        if job not in job_list:
+            job_list.append(job)
 
-    dash_count = int(len(data["MOs"]) / len(job_list))
-
-    for i in range(0, len(job_list)):
-        for k in range(1,dash_count+1):
-            skip = str(k).zfill(2)
-            if skip in skip_me:
-                continue
-            for j in data["MOs"]:
-                job = j["Job"]
-                customer = j["Customer"]
-                mo = j["Manufacturing Order"]
-                drawing_no = j["Drawing No."]
-                description = j["Description"]
-                start = j["Start Date"]
-                finish = j["Finish Date"]
-                quantity = j["Quantity"]
-                mo_split = mo.split("-")
-                dash = int(mo_split[2])
-                if job in job_list[i]:
-                    if k == dash:
-                        break
+for p in range(0,len(job_list)):
+    for i in data["MOs"]:
+        job = i["Job"]
+        mo = i["Manufacturing Order"]
+        if job == job_list[p]:
             print(mo)
-            print(customer)
-            print(drawing_no)
-            print(description)
-            print(start)
-            print(finish)
-            print(quantity)
-"""

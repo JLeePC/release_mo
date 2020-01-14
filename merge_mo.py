@@ -1,43 +1,55 @@
 import os
-import shutil
-import time
-import pyautogui
-import getpass
 import PyPDF2
+import json
 
-#TODO - merge pdfs after pdf_mo has made the pdfs. use the .json file to know the order to merge them.
-#TODO  DD goes before any dash number. 
-
-job = input("What job would you like to merge?: ")
-
-print("\nMerging...\n")
-
-os.chdir(r"C:\Users\jlee.NTPV\Documents\MO Reports\{}".format(job))
+job_list = []
+with open("QS-100 MASTER SCHEDULE.json") as f:
+    data = json.load(f)
+    for k in data["MOs"]:
+        job = k["Job"]
+        if job not in job_list:
+            job_list.append(job)
 
 pdf_merge = []
+for p in range(0,len(job_list)):
+    for i in data["MOs"]:
+        job = i["Job"]
+        mo = i["Manufacturing Order"]
+        if job == job_list[p]:
+            job_split = job.split("-")
+            job = job_split[1]
+            os.chdir(r"C:\Users\jlee.NTPV\Documents\MO Reports\{}".format(job))
+            for pdf in os.listdir('.'):
+                if "DD" in str(pdf):
+                    if mo in pdf:
+                        pdf_merge.append(pdf)
+                        break
+            
+            for pdf in os.listdir('.'):
+                if "MERGE" in str(pdf):
+                    continue
+                if "PL" in str(pdf):
+                    if mo in pdf:
+                        pdf_merge.append(pdf)
+                        break
+            
 
-for file in os.listdir('.'):
-    if "MERGE" in str(file):
-        continue
-    if file.endswith('.pdf'):
-        pdf_merge.append(file)
+    pdf_writer = PyPDF2.PdfFileWriter()
+    for file in pdf_merge:
+        pdfFileObj = open(file,'rb')
+        pdf_reader = PyPDF2.PdfFileReader(pdfFileObj)
 
-pdf_writer = PyPDF2.PdfFileWriter()
+        for pageNum in range(pdf_reader.numPages):
+            pageObj = pdf_reader.getPage(pageNum)
+            pdf_writer.addPage(pageObj)
 
-for file in pdf_merge:
-    pdfFileObj = open(file,'rb')
-    pdf_reader = PyPDF2.PdfFileReader(pdfFileObj)
+            pdf_output = open('{} MERGE.pdf'.format(job_list[p]), 'wb')
 
-    for pageNum in range(pdf_reader.numPages):
-        pageObj = pdf_reader.getPage(pageNum)
-        pdf_writer.addPage(pageObj)
+            pdf_writer.write(pdf_output)
 
-        pdf_output = open(job+' MERGE.pdf', 'wb')
+            pdf_output.close()
 
-        pdf_writer.write(pdf_output)
+        pdfFileObj.close()
+    pdf_merge = []
 
-        pdf_output.close()
-
-    pdfFileObj.close()
-
-os.chdir(r"\\NTPV-SERVER2008\ntpv data\Justyn's MISys\Pick List PDFs\Jobs")
+    os.chdir(r"C:\Users\jlee.NTPV\Documents\MO Reports")
